@@ -17,6 +17,9 @@ import States.BattleState;
 import States.GameState;
 import States.State;
 import Content.Tile;
+import Network.Client;
+import Network.PlayerHandler;
+import Packets.MovementPacket;
 
 public class Player extends Creature {
 
@@ -34,6 +37,7 @@ public class Player extends Creature {
     private boolean flag3;
     private int a;
     private int b;
+    private Client client;
 
     public Player(RenderHandler handler, float x, float y) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
@@ -71,6 +75,11 @@ public class Player extends Creature {
         animUp = new Animation(120, Assets.player_up);
         animLeft = new Animation(120, Assets.player_left);
         animRight = new Animation(120, Assets.player_right);
+    }
+    
+    public void setClient(Client client)
+    {
+        this.client = client;
     }
 
     @Override
@@ -130,6 +139,11 @@ public class Player extends Creature {
             return;
         }
 
+        if ((xMove != 0 || yMove != 0) && client != null && PlayerHandler.players.get(id) != null) {
+            float newX = x + xMove;
+            float newY = y + yMove;
+            client.sendObject(new MovementPacket(id, newX, newY));
+        }
     }
 
     @Override

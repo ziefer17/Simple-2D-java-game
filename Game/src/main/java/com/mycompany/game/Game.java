@@ -6,6 +6,8 @@ package com.mycompany.game;
 
 import java.awt.image.BufferStrategy;
 import Content.Assets;
+import Content.Entity;
+import Content.Player;
 import Content.Transition;
 import Network.Client;
 import States.BattleState;
@@ -60,6 +62,7 @@ public class Game implements Runnable {
     private Client client;
     private int playerId;
     private boolean clientRunning;
+    private Player localPlayer;
     
     public Game(Client client)
     {
@@ -71,10 +74,6 @@ public class Game implements Runnable {
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
     }
-    
-    public void setPlayerId(int id) {
-        this.playerId = id;
-    }
 
     public Game() {
         this.width = 800;
@@ -82,6 +81,11 @@ public class Game implements Runnable {
         this.title = "Title";
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
+    }
+    
+    public void setPlayerId(int id)
+    {
+        this.playerId = id;
     }
 
     private void init() {
@@ -157,7 +161,8 @@ public class Game implements Runnable {
         timer = 0;
         ticks = 0;
 
-        while (running) {
+        while (running) {           
+            
             now = System.nanoTime();
             delta += (now - lastTime) / timePerTick;
             //System.out.println(delta);

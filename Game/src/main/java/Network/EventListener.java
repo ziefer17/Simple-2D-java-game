@@ -6,7 +6,6 @@ import Content.Player;
 import Packets.AddPlayerPacket;
 import Packets.MovementPacket;
 import Packets.RemovePlayerPacket;
-import States.GameState;
 import com.mycompany.game.Game;
 import com.mycompany.game.RenderHandler;
 
@@ -14,14 +13,19 @@ public class EventListener {
     
     private Entity player;
     private Game game;
+    private RenderHandler handler;
     
     public EventListener(RenderHandler handler)
-    {//Player(RenderHandler handler, float x, float y)
+    {
+        this.handler = handler;
         this.player = new Player(0, handler, 100,100);
+        handler.getWorld().getEntityManager().addEntity(this.player);
     }
     public EventListener(Game game, RenderHandler handler) {
+        this.handler = handler;
         this.game = game;
         this.player = new Player(0, handler, 100,100);
+        handler.getWorld().getEntityManager().addEntity(this.player);
     }
     
     public void received(Object p)
@@ -35,6 +39,7 @@ public class EventListener {
         {
             AddPlayerPacket packet = (AddPlayerPacket) p;
             PlayerHandler.players.put(packet.id,new NetPlayer(packet.id,packet.name));
+            Player newPlayer = new Player(packet.id, handler,100,100);
             System.out.println(packet.name + " has joined the game");
             if (game != null && packet.name.equals("Player" + packet.id)) {
                 game.setPlayerId(packet.id);

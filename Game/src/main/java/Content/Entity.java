@@ -18,7 +18,7 @@ public abstract class Entity {
     protected float x, y;
     protected int width, height;
     protected Rectangle bounds;
-    private int id;
+    public int id;
     
     
 
@@ -95,13 +95,25 @@ public abstract class Entity {
         this.height = height;
     }
     
-    public void updatePlayerPosition(int id, float x, float y)
+    public void setId(int id)
     {
+        this.id = id;
+    }
+    
+    public void updatePlayerPosition(int id, float x, float y) {
         NetPlayer player = PlayerHandler.players.get(id);
         if (player != null) {
-            player.x = x; // Update x position
-            player.y = y; // Update y position
-            //System.out.println("Updated player " + player.name + " (ID: " + id + ") to position (" + x + ", " + y + ")");
+            player.x = x;
+            player.y = y;
+            // Update corresponding Player entity in EntityManager
+            for (Entity e : handler.getWorld().getEntityManager().getEntities()) {
+                if (e.id == id) {
+                    e.setX(x);
+                    e.setY(y);
+                    break;
+                }
+            }
+            System.out.println("Updated player " + player.name + " (ID: " + id + ") to position (" + x + ", " + y + ")");
         } else {
             System.out.println("Player with ID " + id + " not found.");
         }

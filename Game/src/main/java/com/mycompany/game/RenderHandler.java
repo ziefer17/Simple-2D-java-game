@@ -50,7 +50,6 @@ public class RenderHandler {
 
 	public void setWorld(World world) {
 		this.world = world;
-	}
-	
+	}	
 }
 

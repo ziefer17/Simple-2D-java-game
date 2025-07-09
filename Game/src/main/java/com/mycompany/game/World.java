@@ -20,7 +20,7 @@ public class World {
     private int[][] tiles;
     private int half = Tile.TILEWIDTH / 2;
 
-    private EntityManager entityManager;
+    private EntityManager entityManager;   
 
     public World(RenderHandler handler, String path) {
         this.handler = handler;
