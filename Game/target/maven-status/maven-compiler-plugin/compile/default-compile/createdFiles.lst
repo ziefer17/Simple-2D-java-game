@@ -52,6 +52,7 @@ Network\PlayerHandler.class
 com\mycompany\game\SpriteSheet.class
 Content\Entity.class
 Packets\AddPlayerPacket.class
+Network\ClientMain.class
 com\mycompany\game\RenderHandler.class
 Content\Bar.class
 com\mycompany\game\UIImageButton.class

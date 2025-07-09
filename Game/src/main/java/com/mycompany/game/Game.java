@@ -7,6 +7,7 @@ package com.mycompany.game;
 import java.awt.image.BufferStrategy;
 import Content.Assets;
 import Content.Transition;
+import Network.Client;
 import States.BattleState;
 import States.GameState;
 import States.MenuState;
@@ -55,11 +56,30 @@ public class Game implements Runnable {
     long lastTime;
     long timer;
     int ticks;
+    
+    private Client client;
+    private int playerId;
+    private boolean clientRunning;
+    
+    public Game(Client client)
+    {
+        this.client = client;
+        this.clientRunning = true;
+        this.width = 800;
+        this.height = 800;
+        this.title = "Title";
+        keyManager = new KeyBoardListener();
+        mouseManager = new MouseEventListener();
+    }
+    
+    public void setPlayerId(int id) {
+        this.playerId = id;
+    }
 
-    public Game(String title, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
+    public Game() {
+        this.width = 800;
+        this.height = 800;
+        this.title = "Title";
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
     }
@@ -207,7 +227,7 @@ public class Game implements Runnable {
     }
 
     public static void main(String[] args) {
-        Game game = new Game("Title", 800, 800);
+        Game game = new Game();
         game.start();
     }
 }

@@ -6,10 +6,20 @@ import Packets.AddPlayerPacket;
 import Packets.MovementPacket;
 import Packets.RemovePlayerPacket;
 import States.GameState;
+import com.mycompany.game.Game;
 
 public class EventListener {
     
     private Entity player;
+    private Game game;
+    
+    public EventListener()
+    {
+        
+    }
+    public EventListener(Game game) {
+        this.game = game;
+    }
     
     public void received(Object p)
     {
