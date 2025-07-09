@@ -53,6 +53,25 @@ public class Player extends Creature {
         animLeft = new Animation(120, Assets.player_left);
         animRight = new Animation(120, Assets.player_right);
     }
+    
+    public Player(int id,RenderHandler handler, float x, float y) {
+        super(id,handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
+
+        bounds.x = 0;
+        bounds.height = 35;
+        bounds.y = PLAYER_HEIGHT - bounds.height - 1;
+        bounds.width = 43;
+
+        health = 100;
+        baseHealth = 100;
+        level = 1;
+        name = "Hero";
+
+        animDown = new Animation(120, Assets.player_down);
+        animUp = new Animation(120, Assets.player_up);
+        animLeft = new Animation(120, Assets.player_left);
+        animRight = new Animation(120, Assets.player_right);
+    }
 
     @Override
     public void tick() {

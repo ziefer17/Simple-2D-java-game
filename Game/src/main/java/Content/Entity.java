@@ -18,6 +18,9 @@ public abstract class Entity {
     protected float x, y;
     protected int width, height;
     protected Rectangle bounds;
+    private int id;
+    
+    
 
     public Entity(RenderHandler handler, float x, float y, int width, int height) {
         this.handler = handler;
@@ -26,6 +29,16 @@ public abstract class Entity {
         this.width = width;
         this.height = height;
 
+        bounds = new Rectangle(0, 0, width, height);
+    }
+    
+    public Entity(int id, RenderHandler handler, float x, float y, int width, int height) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.handler = handler;
+        this.width = width;
+        this.height = height;
         bounds = new Rectangle(0, 0, width, height);
     }
 

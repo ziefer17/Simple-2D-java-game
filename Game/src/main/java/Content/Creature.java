@@ -31,7 +31,14 @@ public abstract class Creature extends Entity {
         speed = DEFAULT_SPEED;
         xMove = 0;
         yMove = 0;
-
+    }
+    
+    public Creature(int id, RenderHandler handler, float x, float y, int width, int height) {
+        super(id,handler, x, y, width, height);
+        health = DEFAULT_HEALTH;
+        speed = DEFAULT_SPEED;
+        xMove = 0;
+        yMove = 0;
     }
 
     public void move() {

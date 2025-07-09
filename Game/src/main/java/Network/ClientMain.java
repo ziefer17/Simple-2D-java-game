@@ -8,7 +8,7 @@ public class ClientMain {
     public static void main(String[] args) {
         Client client = new Client("192.168.1.4", 12345);
         Game game = new Game(client);
-        client.connect();
+        client.connect(new EventListener(game, game.getRenderHandler()));
         System.out.println("Client connected");
         game.start();
         // Simulate movement after a delay

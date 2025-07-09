@@ -27,13 +27,13 @@ public class Client implements Runnable {
         this.port = port;
     }
     
-    public void connect()
+    public void connect(EventListener listener)
     {
         try {
             socket = new Socket(host,port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            listener = new EventListener();
+            this.listener = listener;
             new Thread(this).start();
         } catch(ConnectException e)
         {

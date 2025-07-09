@@ -225,6 +225,10 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
     }
+    
+    public RenderHandler getRenderHandler() {
+        return handler;
+    }
 
     public static void main(String[] args) {
         Game game = new Game();
