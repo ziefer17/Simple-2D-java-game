@@ -104,6 +104,11 @@ public class Game implements Runnable {
         menuState = new MenuState(handler);
         //battleState = new BattleState(handler);
         State.setState(gameState);
+        
+        // Initialize local player
+        localPlayer = new Player(0, handler, 100, 100, true); // Local player
+        localPlayer.setClient(client);
+        handler.getWorld().getEntityManager().addEntity(localPlayer);
     }
 
     private void tick() { //updates all variables

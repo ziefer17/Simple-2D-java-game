@@ -18,14 +18,12 @@ public class EventListener {
     public EventListener(RenderHandler handler)
     {
         this.handler = handler;
-        this.player = new Player(0, handler, 100,100);
-        handler.getWorld().getEntityManager().addEntity(this.player);
+        this.player = new Player(0, handler, 100,100, false);
     }
     public EventListener(Game game, RenderHandler handler) {
         this.handler = handler;
         this.game = game;
-        this.player = new Player(0, handler, 100,100);
-        handler.getWorld().getEntityManager().addEntity(this.player);
+        this.player = new Player(0, handler, 100,100, false);
     }
     
     public void received(Object p)
@@ -39,17 +37,38 @@ public class EventListener {
         {
             AddPlayerPacket packet = (AddPlayerPacket) p;
             PlayerHandler.players.put(packet.id,new NetPlayer(packet.id,packet.name));
-            Player newPlayer = new Player(packet.id, handler,100,100);
+            
+            Player newPlayer = new Player(packet.id, handler,100,100, true);
+            handler.getWorld().getEntityManager().addEntity(newPlayer);
+            
             System.out.println(packet.name + " has joined the game");
             if (game != null && packet.name.equals("Player" + packet.id)) {
                 game.setPlayerId(packet.id);
+                // Set the local player ID and mark as local
+                for (Entity e : handler.getWorld().getEntityManager().getEntities()) {
+                    if (e.id == packet.id) {
+                        ((Player) e).setLocal(true);
+                        break;
+                    }
+                }
             }
         }
         else if (p instanceof RemovePlayerPacket)
         {
             RemovePlayerPacket packet = (RemovePlayerPacket) p;
             System.out.println(PlayerHandler.players.get(packet.id).name + " has left the game");
-            PlayerHandler.players.remove(packet.id);          
+            PlayerHandler.players.remove(packet.id);  
+            
+            Entity toRemove = null;
+            for (Entity e : handler.getWorld().getEntityManager().getEntities()) {
+                if (e.id == packet.id) {
+                    toRemove = e;
+                    break;
+                }
+            }
+            if (toRemove != null) {
+                handler.getWorld().getEntityManager().removeEntity(toRemove);
+            }
         }
     }
 }

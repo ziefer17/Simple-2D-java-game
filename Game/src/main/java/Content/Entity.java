@@ -101,19 +101,10 @@ public abstract class Entity {
     }
     
     public void updatePlayerPosition(int id, float x, float y) {
-        NetPlayer player = PlayerHandler.players.get(id);
-        if (player != null) {
-            player.x = x;
-            player.y = y;
-            // Update corresponding Player entity in EntityManager
-            for (Entity e : handler.getWorld().getEntityManager().getEntities()) {
-                if (e.id == id) {
-                    e.setX(x);
-                    e.setY(y);
-                    break;
-                }
-            }
-            System.out.println("Updated player " + player.name + " (ID: " + id + ") to position (" + x + ", " + y + ")");
+        if (this.id == id) {
+            this.x = x;
+            this.y = y;
+            System.out.println("Updated entity (ID: " + id + ") to position (" + x + ", " + y + ")");
         } else {
             System.out.println("Player with ID " + id + " not found.");
         }
