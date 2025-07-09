@@ -95,24 +95,4 @@ public class Client implements Runnable {
         }
     }
     
-    public static void main(String[] args) {
-        // Client 1
-        Client client1 = new Client("localhost", 12345);
-        client1.connect();
-        System.out.println("Client 1 connected");
-
-        // Client 2
-        Client client2 = new Client("localhost", 12345);
-        client2.connect();
-        System.out.println("Client 2 connected");
-
-        // Simulate player actions (e.g., sending movement packets)
-        // For testing, send a movement packet from Client 1
-        try {
-            Thread.sleep(1000); // Wait for connections to establish
-            client1.sendObject(new MovementPacket(1, 10.0f, 20.0f));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

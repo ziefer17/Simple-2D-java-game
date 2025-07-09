@@ -118,6 +118,6 @@ public class GameServer {
     }
 
     public static void main(String[] args) {
-        new GameServer(12345); // Start server on port 12345
+        new GameServer(12345); 
     }
 }
