@@ -8,7 +8,6 @@ import com.mycompany.game.RenderHandler;
 
 import com.mycompany.game.KeyBoardListener;
 import Content.Tile;
-import Network.PlayerHandler;
 
 public abstract class Creature extends Entity {
 
@@ -33,14 +32,6 @@ public abstract class Creature extends Entity {
         yMove = 0;
     }
     
-    public Creature(int id, RenderHandler handler, float x, float y, int width, int height) {
-        super(id,handler, x, y, width, height);
-        health = DEFAULT_HEALTH;
-        speed = DEFAULT_SPEED;
-        xMove = 0;
-        yMove = 0;
-    }
-
     public void move() {
         if (xMove != 0 && !checkEntityCollisions(xMove, 0f)) {
             moveX();

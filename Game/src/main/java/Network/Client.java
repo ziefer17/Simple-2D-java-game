@@ -1,98 +1,83 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Network;
-
-import Packets.MovementPacket;
-import Packets.RemovePlayerPacket;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ConnectException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.SocketException;
+import java.util.Scanner;
 
-public class Client implements Runnable {
 
-    private  String host;
-    private int port;
-    
-    private  Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private boolean running = false;
-    private EventListener listener;
-    
-    public Client(String host, int port)
-    {
-        this.host = host;
-        this.port = port;
+public class Client {
+    public static void main(final String[] args) {
+        new Client(Server.port);
     }
-    
-    public void connect(EventListener listener)
-    {
+
+    private Socket socket;
+    private BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
+
+    public Client(final int port) {
         try {
-            socket = new Socket(host,port);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            this.listener = listener;
-            new Thread(this).start();
-        } catch(ConnectException e)
-        {
-            System.out.println("unable to connect to server");
-        }
-        catch (IOException e)
-        {
+            socket = new Socket("localhost", port);
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            setUsername();
+            startReadMessageLoop();
+            startSendMessageLoop();
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
-    
-    public void close() {
-        try {
-            running = false;     
-            RemovePlayerPacket packet = new RemovePlayerPacket();
-            sendObject(packet);
-            in.close();
-            out.close();
-            socket.close();
-        } catch (IOException e)
-        {
+
+    private void setUsername() {
+        System.out.print("Enter your username: ");
+        try (Scanner scanner = new Scanner(System.in)) {
+            bufferedWriter.write(scanner.nextLine());
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (final IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Sent username information.");
     }
-    
-    //send data to server
-    public void sendObject(Object packet)
-    {
-        try{
-            out.writeObject(packet);
-            out.flush();
-        }
-        catch(IOException e)
-        {
+
+    private void startSendMessageLoop() {
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (socket.isConnected()) {
+                bufferedWriter.write(scanner.nextLine());
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+            }
+            System.out.println("Send message loop done.");
+        } catch (final IOException e) {
             e.printStackTrace();
         }
+        // new Thread(new Runnable() {
+        // @Override
+        // public void run() {
+        // }
+        // }).start();
     }
-    
-    
-    @Override
-    public void run() {
-        try {
-            running = true;
-            
-            while (running) {
+
+    private void startReadMessageLoop() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    Object data = in.readObject();
-                    
-                    listener.received(data);
-                } catch (ClassNotFoundException e) {
+                    while (socket.isConnected()) {
+                        System.out.println(bufferedReader.readLine());
+                    }
+                    System.out.println("Read message loop done.");
+                } catch (final IOException e) {
                     e.printStackTrace();
-                } catch (SocketException e) {
-                    close();
                 }
             }
-        } catch(IOException e)
-        {
-            e.printStackTrace();
-        }
+        }).start();
     }
-    
 }

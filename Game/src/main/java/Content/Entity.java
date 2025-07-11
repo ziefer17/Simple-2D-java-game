@@ -4,9 +4,6 @@
  */
 package Content;
 
-
-import Network.NetPlayer;
-import Network.PlayerHandler;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 

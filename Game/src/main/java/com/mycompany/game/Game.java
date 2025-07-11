@@ -59,33 +59,12 @@ public class Game implements Runnable {
     long timer;
     int ticks;
     
-    private Client client;
-    private int playerId;
-    private boolean clientRunning;
-    private Player localPlayer;
-    
-    public Game(Client client)
-    {
-        this.client = client;
-        this.clientRunning = true;
-        this.width = 800;
-        this.height = 800;
-        this.title = "Title";
-        keyManager = new KeyBoardListener();
-        mouseManager = new MouseEventListener();
-    }
-
     public Game() {
         this.width = 800;
         this.height = 800;
         this.title = "Title";
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
-    }
-    
-    public void setPlayerId(int id)
-    {
-        this.playerId = id;
     }
 
     private void init() {
@@ -105,10 +84,6 @@ public class Game implements Runnable {
         //battleState = new BattleState(handler);
         State.setState(gameState);
         
-        // Initialize local player
-        localPlayer = new Player(0, handler, 100, 100, true); // Local player
-        localPlayer.setClient(client);
-        handler.getWorld().getEntityManager().addEntity(localPlayer);
     }
 
     private void tick() { //updates all variables
