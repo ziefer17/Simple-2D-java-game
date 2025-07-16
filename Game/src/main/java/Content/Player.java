@@ -43,6 +43,8 @@ public class Player extends Creature {
     private BufferedReader in;
     private int playerId;
     private boolean inBattle = false;
+    private long lastBattleTime = 0; // Track time of last battle
+    private static final long BATTLE_COOLDOWN = 10000; // 1 second cooldown in milliseconds
 
     public Player(RenderHandler handler, float x, float y, int playerId, Socket socket, PrintWriter out, BufferedReader in) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
@@ -133,7 +135,8 @@ public class Player extends Creature {
     public void endBattle() {
         inBattle = false;
         flag3 = false;
-        sendPosition(); // Update server with position after battle
+        lastBattleTime = System.currentTimeMillis(); // Set cooldown start
+        sendPosition();
         System.out.println("Battle ended for player " + playerId);
     }
 
@@ -241,22 +244,23 @@ public class Player extends Creature {
 
     private void checkEncounter() {
         World w = handler.getWorld();
-        // Convert player position to tile coordinates
         int tileX = (int) (x / Tile.TILEWIDTH);
         int tileY = (int) (y / Tile.TILEHEIGHT);
         Tile currentTile = w.getTile(tileX, tileY);
 
-        if (currentTile == Tile.bush && !inBattle && Math.random() >= 0.1) { // 10% chance for encounter
+        long currentTime = System.currentTimeMillis();
+        if (currentTile == Tile.bush && !inBattle 
+            && currentTime - lastBattleTime > BATTLE_COOLDOWN 
+            && Math.random() < 0.1) { // 10% chance for encounter
             a = tileX;
             b = tileY;
             if (!flag3) {
                 flag3 = true;
                 inBattle = true;
-                Game.flag = true; // Trigger transition
+                Game.flag = true;
                 System.out.println("Battle triggered at tile (" + tileX + ", " + tileY + ")");
             }
         } else if (inBattle && (tileX != a || tileY != b)) {
-            // Reset if player somehow moves out of the bush (shouldn't happen)
             inBattle = false;
             flag3 = false;
             System.out.println("Battle reset: Moved out of bush");
