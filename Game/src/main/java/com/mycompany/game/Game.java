@@ -6,10 +6,7 @@ package com.mycompany.game;
 
 import java.awt.image.BufferStrategy;
 import Content.Assets;
-import Content.Entity;
-import Content.Player;
 import Content.Transition;
-import Network.Client;
 import States.BattleState;
 import States.GameState;
 import States.MenuState;
@@ -58,34 +55,13 @@ public class Game implements Runnable {
     long lastTime;
     long timer;
     int ticks;
-    
-    private Client client;
-    private int playerId;
-    private boolean clientRunning;
-    private Player localPlayer;
-    
-    public Game(Client client)
-    {
-        this.client = client;
-        this.clientRunning = true;
-        this.width = 800;
-        this.height = 800;
-        this.title = "Title";
-        keyManager = new KeyBoardListener();
-        mouseManager = new MouseEventListener();
-    }
 
-    public Game() {
-        this.width = 800;
-        this.height = 800;
-        this.title = "Title";
+    public Game(String title, int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.title = title;
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
-    }
-    
-    public void setPlayerId(int id)
-    {
-        this.playerId = id;
     }
 
     private void init() {
@@ -104,11 +80,6 @@ public class Game implements Runnable {
         menuState = new MenuState(handler);
         //battleState = new BattleState(handler);
         State.setState(gameState);
-        
-        // Initialize local player
-        localPlayer = new Player(0, handler, 100, 100, true); // Local player
-        localPlayer.setClient(client);
-        handler.getWorld().getEntityManager().addEntity(localPlayer);
     }
 
     private void tick() { //updates all variables
@@ -166,8 +137,7 @@ public class Game implements Runnable {
         timer = 0;
         ticks = 0;
 
-        while (running) {           
-            
+        while (running) {
             now = System.nanoTime();
             delta += (now - lastTime) / timePerTick;
             //System.out.println(delta);
@@ -235,13 +205,9 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
     }
-    
-    public RenderHandler getRenderHandler() {
-        return handler;
-    }
 
     public static void main(String[] args) {
-        Game game = new Game();
+        Game game = new Game("Title", 800, 800);
         game.start();
     }
 }

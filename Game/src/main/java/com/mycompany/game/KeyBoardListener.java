@@ -77,12 +77,42 @@ public class KeyBoardListener implements KeyListener, FocusListener {
         } else {
             int keyCode = e.getKeyCode();
             if (keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A) {
+                //while(!checkGridMovementX()) {
                 keys[keyCode] = true;
+                //System.out.println("Player's current xPosition: " + Creature.xPosition);
+                //if(Creature.collided) {
+                //	break;
+                //	}
+                //}
             } else if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
+                //while(!checkGridMovementY()) {
                 keys[keyCode] = true;
+                //System.out.println("Player's current yPosition: " + Creature.yPosition);
+                //if(Creature.collided) {
+                //break;
+                //}
+                //}
             }
             keys[keyCode] = false;
             current = -1;
         }
     }
+
+
+//    public boolean up()
+//    {
+//        return keys[KeyEvent.VK_W] || keys[KeyEvent.VK_UP];
+//    }
+//    public boolean down()
+//    {
+//        return keys[KeyEvent.VK_S] || keys[KeyEvent.VK_DOWN];
+//    }
+//    public boolean left()
+//    {
+//        return keys[KeyEvent.VK_A] || keys[KeyEvent.VK_LEFT];
+//    }
+//    public boolean right()
+//    {
+//        return keys[KeyEvent.VK_D] || keys[KeyEvent.VK_RIGHT];
+//    }
 }

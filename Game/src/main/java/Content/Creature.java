@@ -8,7 +8,6 @@ import com.mycompany.game.RenderHandler;
 
 import com.mycompany.game.KeyBoardListener;
 import Content.Tile;
-import Network.PlayerHandler;
 
 public abstract class Creature extends Entity {
 
@@ -31,14 +30,7 @@ public abstract class Creature extends Entity {
         speed = DEFAULT_SPEED;
         xMove = 0;
         yMove = 0;
-    }
-    
-    public Creature(int id, RenderHandler handler, float x, float y, int width, int height) {
-        super(id,handler, x, y, width, height);
-        health = DEFAULT_HEALTH;
-        speed = DEFAULT_SPEED;
-        xMove = 0;
-        yMove = 0;
+
     }
 
     public void move() {
@@ -81,6 +73,7 @@ public abstract class Creature extends Entity {
             if (!collisionWithTile((int) (x + bounds.x) / Tile.TILEWIDTH, ty) && !collisionWithTile((int) (x + bounds.x + bounds.width) / Tile.TILEWIDTH, ty)) {
                 y += yMove;
                 yPosition += yMove;
+                //System.out.println("y added to yMove:" + y + " yPosition=" + yPosition);
             } else {
                 collided = true;
                 y = ty * Tile.TILEHEIGHT + Tile.TILEHEIGHT - bounds.y;
@@ -90,7 +83,8 @@ public abstract class Creature extends Entity {
             int ty = (int) (y + yMove + bounds.y + bounds.height) / Tile.TILEHEIGHT;
             if (!collisionWithTile((int) (x + bounds.x) / Tile.TILEWIDTH, ty) && !collisionWithTile((int) (x + bounds.x + bounds.width) / Tile.TILEWIDTH, ty)) {
                 y += yMove;
-                yPosition += yMove;                
+                yPosition += yMove;
+                //System.out.println("y added to yMove:" + y + " yPosition=" + yPosition);
             } else {
                 y = ty * Tile.TILEHEIGHT - bounds.y - bounds.height - 1;
                 collided = true;
@@ -121,4 +115,5 @@ public abstract class Creature extends Entity {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
+
 }

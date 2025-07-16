@@ -17,9 +17,6 @@ import States.BattleState;
 import States.GameState;
 import States.State;
 import Content.Tile;
-import Network.Client;
-import Network.PlayerHandler;
-import Packets.MovementPacket;
 
 public class Player extends Creature {
 
@@ -37,31 +34,10 @@ public class Player extends Creature {
     private boolean flag3;
     private int a;
     private int b;
-    private Client client;
-    private boolean isLocal;
 
     public Player(RenderHandler handler, float x, float y) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
-        this.isLocal = isLocal;
-        bounds.x = 0;
-        bounds.height = 35;
-        bounds.y = PLAYER_HEIGHT - bounds.height - 1;
-        bounds.width = 43;
-        isLocal = true;
-        health = 100;
-        baseHealth = 100;
-        level = 1;
-        name = "Hero";
 
-        animDown = new Animation(120, Assets.player_down);
-        animUp = new Animation(120, Assets.player_up);
-        animLeft = new Animation(120, Assets.player_left);
-        animRight = new Animation(120, Assets.player_right);
-    }
-    
-    public Player(int id,RenderHandler handler, float x, float y, boolean isLocal) {
-        super(id,handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
-        
         bounds.x = 0;
         bounds.height = 35;
         bounds.y = PLAYER_HEIGHT - bounds.height - 1;
@@ -76,15 +52,6 @@ public class Player extends Creature {
         animUp = new Animation(120, Assets.player_up);
         animLeft = new Animation(120, Assets.player_left);
         animRight = new Animation(120, Assets.player_right);
-    }
-    
-    public void setClient(Client client)
-    {
-        this.client = client;
-    }
-    
-    public void setLocal(boolean isLocal) {
-        this.isLocal = isLocal;
     }
 
     @Override
@@ -94,17 +61,11 @@ public class Player extends Creature {
             animUp.tick();
             animRight.tick();
             animLeft.tick();
-            if (isLocal) {
-                getInput(); // Only local player processes input
-            }
+            getInput();
             move();
-            if (isLocal) {
-                checkEncounter(); // Only local player checks for encounters
-            }
+            checkEncounter();
         }
-        if (isLocal) {
-            handler.getCamera().centerOnEntity(this); // Camera follows local player
-        }
+        handler.getCamera().centerOnEntity(this);
     }
 
     private void getInput() {
@@ -150,11 +111,6 @@ public class Player extends Creature {
             return;
         }
 
-        if ((xMove != 0 || yMove != 0) && client != null && PlayerHandler.players.get(id) != null) {
-            float newX = x + xMove;
-            float newY = y + yMove;
-            client.sendObject(new MovementPacket(id, newX, newY));
-        }
     }
 
     @Override
