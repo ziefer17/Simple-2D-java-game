@@ -1,0 +1,10 @@
+create database QLDB
+use QLDB;
+create table tblUser(
+id int primary key,
+nameU text,
+emailU text,
+passU text
+)
+insert into tblUser values(1,'Anna','an@gmail.com','123')
+select * from tblUser
