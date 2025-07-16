@@ -88,6 +88,7 @@ public class World {
         if (t == null) {
             return Tile.grassTile;
         }
+        System.out.println("Tile at (" + x + ", " + y + ") is ID " + t.getId() + " (" + (t == Tile.bush ? "Bush" : "Other") + ")");
         return t;
     }
 

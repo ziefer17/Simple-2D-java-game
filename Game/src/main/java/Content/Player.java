@@ -34,7 +34,7 @@ public class Player extends Creature {
 
     private boolean flag;
     private boolean flag2;
-    private boolean flag3;
+    private boolean flag3 = false;
     private int a;
     private int b;
     
@@ -42,6 +42,7 @@ public class Player extends Creature {
     private PrintWriter out;
     private BufferedReader in;
     private int playerId;
+    private boolean inBattle = false;
 
     public Player(RenderHandler handler, float x, float y, int playerId, Socket socket, PrintWriter out, BufferedReader in) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
@@ -66,8 +67,21 @@ public class Player extends Creature {
         animRight = new Animation(120, Assets.player_right);
     }
     
+//    @Override
+//    public void move() {
+//        if (xMove != 0 && !checkEntityCollisions(xMove, 0f)) {
+//            moveX();
+//            sendPosition();
+//        }
+//        if (yMove != 0 && !checkEntityCollisions(0f, yMove)) {
+//            moveY();
+//            sendPosition();
+//        }
+//    }
+    
     @Override
     public void move() {
+        if (inBattle) return; // Prevent movement during battle
         if (xMove != 0 && !checkEntityCollisions(xMove, 0f)) {
             moveX();
             sendPosition();
@@ -86,18 +100,41 @@ public class Player extends Creature {
         return playerId;
     }
 
+//    @Override
+//    public void tick() {
+//        if (!Game.flag2) {
+//            animDown.tick();
+//            animUp.tick();
+//            animRight.tick();
+//            animLeft.tick();
+//            getInput();
+//            move();
+//            checkEncounter();
+//        }
+//        handler.getCamera().centerOnEntity(this);
+//    }
+    
     @Override
     public void tick() {
-        if (!Game.flag2) {
+        if (!Game.flag2) { // Only update animations if not transitioning
             animDown.tick();
             animUp.tick();
             animRight.tick();
             animLeft.tick();
+        }
+        if (!inBattle) { // Only get input and move if not in battle
             getInput();
             move();
             checkEncounter();
         }
         handler.getCamera().centerOnEntity(this);
+    }
+    
+    public void endBattle() {
+        inBattle = false;
+        flag3 = false;
+        sendPosition(); // Update server with position after battle
+        System.out.println("Battle ended for player " + playerId);
     }
 
     private void getInput() {
@@ -182,24 +219,47 @@ public class Player extends Creature {
         }
     }
 
+//    private void checkEncounter() {
+//        World w = handler.getWorld();
+//        if ((w.getTile(w.getSpawnX() + ((int) Creature.xPosition) / 64,
+//                w.getSpawnY() + ((int) Creature.yPosition) / 64) == Tile.bush) && !BattleState.encounterFlag
+//                && Math.random() >= 0.0) {
+//            a = w.getSpawnX() + ((int) Creature.xPosition) / 64;
+//            b = w.getSpawnY() + ((int) Creature.yPosition) / 64;
+//            if (!flag3) {
+//                flag3 = true;
+//                Game.flag = true;
+//            }
+//        } else if (BattleState.encounterFlag) {
+//            if (a != w.getSpawnX() + ((int) Creature.xPosition) / 64
+//                    || b != w.getSpawnY() + ((int) Creature.yPosition) / 64) {
+//                BattleState.encounterFlag = false;
+//                flag3 = false;
+//            }
+//        }
+//    }
+
     private void checkEncounter() {
         World w = handler.getWorld();
-        if ((w.getTile(w.getSpawnX() + ((int) Creature.xPosition) / 64,
-                w.getSpawnY() + ((int) Creature.yPosition) / 64) == Tile.bush) && !BattleState.encounterFlag
-                && Math.random() >= 0.99) {
-            a = w.getSpawnX() + ((int) Creature.xPosition) / 64;
-            b = w.getSpawnY() + ((int) Creature.yPosition) / 64;
+        // Convert player position to tile coordinates
+        int tileX = (int) (x / Tile.TILEWIDTH);
+        int tileY = (int) (y / Tile.TILEHEIGHT);
+        Tile currentTile = w.getTile(tileX, tileY);
+
+        if (currentTile == Tile.bush && !inBattle && Math.random() >= 0.1) { // 10% chance for encounter
+            a = tileX;
+            b = tileY;
             if (!flag3) {
                 flag3 = true;
-                Game.flag = true;
+                inBattle = true;
+                Game.flag = true; // Trigger transition
+                System.out.println("Battle triggered at tile (" + tileX + ", " + tileY + ")");
             }
-        } else if (BattleState.encounterFlag) {
-            if (a != w.getSpawnX() + ((int) Creature.xPosition) / 64
-                    || b != w.getSpawnY() + ((int) Creature.yPosition) / 64) {
-                BattleState.encounterFlag = false;
-                flag3 = false;
-            }
+        } else if (inBattle && (tileX != a || tileY != b)) {
+            // Reset if player somehow moves out of the bush (shouldn't happen)
+            inBattle = false;
+            flag3 = false;
+            System.out.println("Battle reset: Moved out of bush");
         }
     }
-
 }

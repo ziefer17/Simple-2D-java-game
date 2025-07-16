@@ -150,7 +150,27 @@ public class Game implements Runnable {
         menuState = new MenuState(handler);
         State.setState(gameState);
     }
-    private void tick() { //updates all variables
+//    private void tick() { //updates all variables
+//        keyManager.tick();
+//
+//        if (State.getState() != null) {
+//            State.getState().tick();
+//        }
+//
+//        if (flag) {
+//            flag = false;
+//            transition = new Transition();
+//            flag2 = true;
+//        }
+//        if (Transition.canStart) {
+//            Transition.canStart = false;
+//            battling = true;
+//            battleState = new BattleState(handler);
+//            State.setState(handler.getGame().battleState);
+//        }
+//    }
+    
+    private void tick() {
         keyManager.tick();
 
         if (State.getState() != null) {
@@ -161,16 +181,17 @@ public class Game implements Runnable {
             flag = false;
             transition = new Transition();
             flag2 = true;
+            System.out.println("Starting transition to battle");
         }
         if (Transition.canStart) {
             Transition.canStart = false;
-            battling = true;
             battleState = new BattleState(handler);
-            State.setState(handler.getGame().battleState);
+            State.setState(battleState);
+            System.out.println("Switched to BattleState");
         }
     }
 
-    private void render() { //renders all objects
+    private void render() {
         bs = display.getCanvas().getBufferStrategy();
         if (bs == null) {
             display.getCanvas().createBufferStrategy(3);
@@ -178,19 +199,24 @@ public class Game implements Runnable {
         }
         g = bs.getDrawGraphics();
 
-        //Clears screen
+        // Clear screen
         g.clearRect(0, 0, width, height);
 
-        //Draws stuff in the screen-
-        if (State.getState() != null) {
-            State.getState().render(g);
+        // Draw stuff
+        try {
+            if (State.getState() != null) {
+                State.getState().render(g);
+            }
+
+            if (flag2) {
+                transition.render(g);
+            }
+        } catch (Exception e) {
+            System.err.println("Error rendering game state");
+            e.printStackTrace();
         }
 
-        if (flag2) {
-            transition.render(g);
-        }
-
-        //End drawings-
+        // End drawings
         bs.show();
         g.dispose();
     }
@@ -222,7 +248,7 @@ public class Game implements Runnable {
                 ticks = 0;
                 timer = 0;
             }
-        }
+        }       
 
         stop();
     }

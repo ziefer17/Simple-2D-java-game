@@ -24,10 +24,16 @@ public class Description {
     private RenderHandler handler;
 
     public Description(int type, String name, int health, int baseHealth, int level, int x, int y, RenderHandler handler) {
-        nameText = new Text(name, x - 4, y + 22, 4, -1);
+        // Validate name to contain only letters, spaces, or '!'
+        String safeName = name.replaceAll("[^a-zA-Z !]", ""); // Remove invalid characters
+        if (safeName.isEmpty()) {
+            safeName = "Unknown"; // Fallback name
+        }
+        System.out.println("Creating Description with name: '" + safeName + "', health: " + health + "/" + baseHealth);
+        nameText = new Text(safeName, x - 4, y + 22, 4, -1);
         this.handler = handler;
         this.type = type;
-        this.name = name;
+        this.name = safeName;
         this.level = level;
         this.x = x;
         this.y = y;
@@ -47,15 +53,20 @@ public class Description {
     }
 
     public void render(Graphics g) {
-        if (type == 0 || type == 1) {
-            g.drawImage(Assets.enemyDescription, x, y, 102 * 4, 33 * 4, null);
-            levelDescription.render(g);
-            nameText.render(g);
-            healthBar.render(g);
-        } else if (type == 2) {
-            xpBar.render(g);
-            healthBar.render(g);
-            g.drawImage(Assets.playerDescription, 0, 0, 105 * 4, 38 * 4, null);
+        try {
+            if (type == 0 || type == 1) {
+                g.drawImage(Assets.enemyDescription, x, y, 102 * 4, 33 * 4, null);
+                levelDescription.render(g);
+                nameText.render(g);
+                healthBar.render(g);
+            } else if (type == 2) {
+                xpBar.render(g);
+                healthBar.render(g);
+                g.drawImage(Assets.playerDescription, 0, 0, 105 * 4, 38 * 4, null);
+            }
+        } catch (Exception e) {
+            System.err.println("Error rendering Description for name: " + name);
+            e.printStackTrace();
         }
     }
 

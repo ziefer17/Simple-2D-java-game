@@ -15,6 +15,7 @@ import Content.AttackBarManager;
 import Content.Bar;
 import Content.InGamePlayer;
 import Content.Monster;
+import Content.Player;
 import Content.Transition;
 import com.mycompany.game.RenderHandler;
 import com.mycompany.game.UIImageButton;
@@ -39,6 +40,23 @@ public class BattleState extends State {
     public static boolean changedTurn;
     public static boolean switchGameStates;
 
+//    public BattleState(RenderHandler handler) {
+//        super(handler);
+//        showBars = false;
+//        playerAttack = true;
+//        this.handler = handler;
+//        bar = new Bar(handler);
+//
+//        monsters.add(new Monster("Rabbit", Assets.monsters[0], 38 * 4, 27 * 4, 440, 160, 50, 20, 1, handler));
+//        //monsters.add(new Monster("Angry Radish", Assets.monsters[1], 23 * 4, 41 * 4, 480, 110, 1, 20, 1));
+//
+//        monster = monsters.get(0);
+//        inGamePlayer = new InGamePlayer(handler);
+//        attackBarManager = new AttackBarManager(handler);
+//        switchGameStates = false;
+//        initializeUI();
+//    }
+    
     public BattleState(RenderHandler handler) {
         super(handler);
         showBars = false;
@@ -47,17 +65,42 @@ public class BattleState extends State {
         bar = new Bar(handler);
 
         monsters.add(new Monster("Rabbit", Assets.monsters[0], 38 * 4, 27 * 4, 440, 160, 50, 20, 1, handler));
-        //monsters.add(new Monster("Angry Radish", Assets.monsters[1], 23 * 4, 41 * 4, 480, 110, 1, 20, 1));
-
         monster = monsters.get(0);
         inGamePlayer = new InGamePlayer(handler);
         attackBarManager = new AttackBarManager(handler);
         switchGameStates = false;
+        encounterFlag = false; // Allow new encounters after battle ends
         initializeUI();
+        System.out.println("BattleState initialized");
     }
 
     private boolean f;
 
+//    @Override
+//    public void tick() {
+//        if (showBars) {
+//            bar.tick();
+//            attackBarManager.tick();
+//        }
+//        uiManager.tick();
+//        monster.tick();
+//        inGamePlayer.tick();
+//
+//        if (Monster.deathState != 0) {
+//            if (!f) {
+//                f = true;
+//                handler.getMouseManager().setUIManager(arrowManager);
+//            }
+//            arrowManager.tick();
+//            if (switchGameStates) {
+//                switchGameStates = false;
+//                switchToGameState();
+//                destroy();
+//            }
+//        }
+//
+//    }
+    
     @Override
     public void tick() {
         if (showBars) {
@@ -75,49 +118,61 @@ public class BattleState extends State {
             }
             arrowManager.tick();
             if (switchGameStates) {
-                switchGameStates = false;
                 switchToGameState();
-                destroy();
             }
         }
-
     }
 
     @Override
     public void render(Graphics g) {
-        drawBackground(g);
-        monster.render(g);
-        inGamePlayer.render(g);
+        try {
+            drawBackground(g);
+            monster.render(g);
+            inGamePlayer.render(g);
 
-        if (showBars) {
-            bar.render(g);
-            attackBarManager.render(g);
-            if (Monster.deathState < 2) {
-                drawSquares(g);
+            if (showBars) {
+                bar.render(g);
+                attackBarManager.render(g);
+                if (Monster.deathState < 2) {
+                    drawSquares(g);
+                }
+            } else {
+                uiManager.render(g);
             }
-        } else {
-            uiManager.render(g);
-        }
 
-        if (Monster.deathState <= 4 && Monster.deathState >= 2) {
-            arrowManager.render(g);
-        }
+            if (Monster.deathState <= 4 && Monster.deathState >= 2) {
+                arrowManager.render(g);
+            }
 
-        if (Monster.deathState == 5) {
-            switchToGameState();
-            Monster.deathState = 0;
+            if (Monster.deathState == 5) {
+                switchToGameState();
+                Monster.deathState = 0;
+            }
+        } catch (Exception e) {
+            System.err.println("Error rendering BattleState");
+            e.printStackTrace();
         }
-
     }
 
+//    private void switchToGameState() {
+//        encounterFlag = true;
+//        handler.getMouseManager().setUIManager(null);
+//        Transition.canStart = false;
+//        Game.flag2 = false;
+//        State.setState(handler.getGame().gameState);
+//        BattleState.switchGameStates = true;
+//        destroy();
+//    }
+    
     private void switchToGameState() {
-        encounterFlag = true;
         handler.getMouseManager().setUIManager(null);
         Transition.canStart = false;
         Game.flag2 = false;
+        Player player = handler.getWorld().getEntityManager().getPlayer();
+        player.endBattle();
         State.setState(handler.getGame().gameState);
-        BattleState.switchGameStates = true;
         destroy();
+        System.out.println("Returned to GameState");
     }
 
     private void initializeUI() {
