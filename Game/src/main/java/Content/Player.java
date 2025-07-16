@@ -17,6 +17,9 @@ import States.BattleState;
 import States.GameState;
 import States.State;
 import Content.Tile;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Player extends Creature {
 
@@ -34,9 +37,18 @@ public class Player extends Creature {
     private boolean flag3;
     private int a;
     private int b;
+    
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private int playerId;
 
-    public Player(RenderHandler handler, float x, float y) {
+    public Player(RenderHandler handler, float x, float y, int playerId, Socket socket, PrintWriter out, BufferedReader in) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
+        this.playerId = playerId;
+        this.socket = socket;
+        this.out = out;
+        this.in = in;
 
         bounds.x = 0;
         bounds.height = 35;
@@ -46,12 +58,32 @@ public class Player extends Creature {
         health = 100;
         baseHealth = 100;
         level = 1;
-        name = "Hero";
+        name = "Hero" + playerId; // Unique name per player
 
         animDown = new Animation(120, Assets.player_down);
         animUp = new Animation(120, Assets.player_up);
         animLeft = new Animation(120, Assets.player_left);
         animRight = new Animation(120, Assets.player_right);
+    }
+    
+    @Override
+    public void move() {
+        if (xMove != 0 && !checkEntityCollisions(xMove, 0f)) {
+            moveX();
+            sendPosition();
+        }
+        if (yMove != 0 && !checkEntityCollisions(0f, yMove)) {
+            moveY();
+            sendPosition();
+        }
+    }
+
+    private void sendPosition() {
+        out.println("MOVE:" + x + "," + y);
+    }
+
+    public int getPlayerId() {
+        return playerId;
     }
 
     @Override

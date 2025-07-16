@@ -7,11 +7,17 @@ package com.mycompany.game;
 import java.awt.image.BufferStrategy;
 import Content.Assets;
 import Content.Transition;
+import Net.NetworkedPlayer;
 import States.BattleState;
 import States.GameState;
 import States.MenuState;
 import States.State;
 import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 
 public class Game implements Runnable {
@@ -55,6 +61,11 @@ public class Game implements Runnable {
     long lastTime;
     long timer;
     int ticks;
+    
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private int playerId;
 
     public Game(String title, int width, int height) {
         this.width = width;
@@ -62,6 +73,57 @@ public class Game implements Runnable {
         this.title = title;
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
+        connectToServer();
+    }
+    
+    private void connectToServer() {
+        try {
+            socket = new Socket("192.168.1.4", 12345);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // Read player ID from server
+            String line = in.readLine();
+            if (line.startsWith("ID:")) {
+                playerId = Integer.parseInt(line.substring(3));
+            }
+            // Start a thread to listen for server updates
+            new Thread(this::listenForServerUpdates).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void listenForServerUpdates() {
+        try {
+            String message;
+            while ((message = in.readLine()) != null) {
+                if (message.startsWith("POSITIONS:")) {
+                    updatePlayerPositions(message.substring(10));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void updatePlayerPositions(String data) {
+        String[] playerData = data.split(";");
+        for (String pd : playerData) {
+            if (pd.isEmpty()) continue;
+            String[] parts = pd.split(",");
+            int id = Integer.parseInt(parts[0]);
+            float x = Float.parseFloat(parts[1]);
+            float y = Float.parseFloat(parts[2]);
+            if (id != playerId) { // Don't update the local player
+                NetworkedPlayer np = handler.getWorld().getEntityManager().getNetworkedPlayers().get(id);
+                if (np == null) {
+                    np = new NetworkedPlayer(handler, x, y, id);
+                    handler.getWorld().getEntityManager().addNetworkedPlayer(np);
+                } else {
+                    np.setPosition(x, y);
+                }
+            }
+        }
     }
 
     private void init() {
@@ -76,12 +138,10 @@ public class Game implements Runnable {
         handler = new RenderHandler(this);
         gameCamera = new Rectangle(handler, 0, 0);
 
-        gameState = new GameState(handler);
+        gameState = new GameState(handler, socket, out, in, playerId);
         menuState = new MenuState(handler);
-        //battleState = new BattleState(handler);
         State.setState(gameState);
     }
-
     private void tick() { //updates all variables
         keyManager.tick();
 

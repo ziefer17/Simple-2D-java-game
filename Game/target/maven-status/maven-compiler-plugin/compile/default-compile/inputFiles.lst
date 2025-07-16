@@ -36,6 +36,8 @@ D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Content\T
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Content\Transition.java
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Content\Tree.java
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Content\XPBar.java
+D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Net\GameServer.java
+D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\Net\NetworkedPlayer.java
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\States\BattleState.java
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\States\GameState.java
 D:\Documents\Textbooks\lap trinh java\test\RPG game\Game\src\main\java\States\MenuState.java

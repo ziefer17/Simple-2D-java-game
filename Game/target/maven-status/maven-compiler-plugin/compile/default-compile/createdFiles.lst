@@ -9,6 +9,7 @@ Content\Description.class
 States\GameState.class
 Content\Tile.class
 States\MenuState$1.class
+Net\GameServer.class
 com\mycompany\game\ImageLoader.class
 com\mycompany\game\Utils.class
 Content\Tree.class
@@ -24,7 +25,9 @@ com\mycompany\game\Animation.class
 com\mycompany\game\KeyBoardListener.class
 States\BattleState$3.class
 States\BattleState.class
+Net\NetworkedPlayer.class
 Content\Level.class
+Net\GameServer$PlayerData.class
 States\BattleState$2.class
 com\mycompany\game\Sprite.class
 Content\XPBar.class
@@ -37,6 +40,7 @@ Content\AttackBarManager.class
 Content\EntityManager.class
 Content\EntityManager$1.class
 Content\Transition$1.class
+Net\GameServer$ClientHandler.class
 Content\Creature.class
 Content\MonsterBar.class
 com\mycompany\game\Rectangle.class

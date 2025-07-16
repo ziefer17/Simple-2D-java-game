@@ -16,6 +16,9 @@ import Content.Player;
 import Content.Text;
 import com.mycompany.game.RenderHandler;
 import com.mycompany.game.World;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class GameState extends State {
 
@@ -27,12 +30,13 @@ public class GameState extends State {
     public static int xp = 0;
     private Text coinsText;
 
-    public GameState(RenderHandler handler) {
-        super(handler); //calls constructor of "State" class
-        world = new World(handler, "src/main/resources/Graphics/Maps/world1.txt");
+    public GameState(RenderHandler handler, Socket socket, PrintWriter out, BufferedReader in, int playerId) {
+        super(handler);
+        world = new World(handler, "src/main/resources/Graphics/Maps/world1.txt", socket, out, in, playerId);
         handler.setWorld(world);
+        player = new Player(handler, 100, 100, playerId, socket, out, in);
+        world.getEntityManager().setPlayer(player);
         playerDescription = new Description(2, Player.name, Player.health, Player.baseHealth, Player.level, handler);
-
     }
 
     @Override

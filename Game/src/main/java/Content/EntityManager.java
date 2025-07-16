@@ -4,16 +4,20 @@
  */
 package Content;
 
+import Net.NetworkedPlayer;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 import com.mycompany.game.RenderHandler;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityManager {
 
     private RenderHandler handler;
     private Player player;
+    private Map<Integer, NetworkedPlayer> networkedPlayers;
     private ArrayList<Entity> entities;
     private Comparator<Entity> renderSorter = new Comparator<Entity>() {
 
@@ -30,14 +34,17 @@ public class EntityManager {
     public EntityManager(RenderHandler handler, Player player) {
         this.handler = handler;
         this.player = player;
-        entities = new ArrayList<Entity>();
+        this.networkedPlayers = new HashMap<>();
+        this.entities = new ArrayList<>();
         addEntity(player);
     }
 
     public void tick() {
-        for (int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
+        for (Entity e : entities) {
             e.tick();
+        }
+        for (NetworkedPlayer np : networkedPlayers.values()) {
+            np.tick();
         }
     }
 
@@ -45,11 +52,26 @@ public class EntityManager {
         for (Entity e : entities) {
             e.render(g);
         }
+        for (NetworkedPlayer np : networkedPlayers.values()) {
+            np.render(g);
+        }
         entities.sort(renderSorter);
     }
 
     public void addEntity(Entity e) {
         entities.add(e);
+    }
+    
+    public void addNetworkedPlayer(NetworkedPlayer np) {
+        networkedPlayers.put(np.getPlayerId(), np);
+    }
+    
+    public void removeNetworkedPlayer(int playerId) {
+        networkedPlayers.remove(playerId);
+    }
+    
+    public Map<Integer, NetworkedPlayer> getNetworkedPlayers() {
+        return networkedPlayers;
     }
 
     public void removeEntity(Entity e) {

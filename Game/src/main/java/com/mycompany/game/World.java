@@ -11,6 +11,11 @@ import Content.EntityManager;
 import Content.Player;
 import Content.Tree;
 import Content.Tile;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import static java.lang.System.in;
+import static java.lang.System.out;
+import java.net.Socket;
 
 public class World {
 
@@ -22,9 +27,9 @@ public class World {
 
     private EntityManager entityManager;
 
-    public World(RenderHandler handler, String path) {
+    public World(RenderHandler handler, String path, Socket socket, PrintWriter out, BufferedReader in, int playerId) {
         this.handler = handler;
-        entityManager = new EntityManager(handler, new Player(handler, 100, 100));
+        entityManager = new EntityManager(handler, new Player(handler, 100, 100, playerId, socket, out, in));
 
         loadWorld(path);
 
