@@ -9,7 +9,6 @@ import Content.Assets;
 import Content.Entity;
 import Content.Player;
 import Content.Transition;
-import Network.Client;
 import States.BattleState;
 import States.GameState;
 import States.MenuState;

@@ -1,4 +1,4 @@
-package gui;
+package src.main.shooter.gui.client;
 
 import java.awt.Color;
 import java.awt.Dimension;
