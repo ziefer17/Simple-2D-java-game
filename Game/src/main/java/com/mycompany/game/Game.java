@@ -81,12 +81,11 @@ public class Game implements Runnable {
             socket = new Socket("192.168.1.4", 12345);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            // Read player ID from server
             String line = in.readLine();
-            if (line.startsWith("ID:")) {
+            if (line != null && line.startsWith("ID:")) {
                 playerId = Integer.parseInt(line.substring(3));
+                System.out.println("Assigned Player ID: " + playerId);
             }
-            // Start a thread to listen for server updates
             new Thread(this::listenForServerUpdates).start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,26 +101,35 @@ public class Game implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Disconnected from server");
         }
     }
     
     private void updatePlayerPositions(String data) {
+        if (data.isEmpty()) return;
         String[] playerData = data.split(";");
+        System.out.println("Received positions: " + data); // Debug
         for (String pd : playerData) {
             if (pd.isEmpty()) continue;
-            String[] parts = pd.split(",");
-            int id = Integer.parseInt(parts[0]);
-            float x = Float.parseFloat(parts[1]);
-            float y = Float.parseFloat(parts[2]);
-            if (id != playerId) { // Don't update the local player
-                NetworkedPlayer np = handler.getWorld().getEntityManager().getNetworkedPlayers().get(id);
-                if (np == null) {
-                    np = new NetworkedPlayer(handler, x, y, id);
-                    handler.getWorld().getEntityManager().addNetworkedPlayer(np);
-                } else {
-                    np.setPosition(x, y);
+            try {
+                String[] parts = pd.split(",");
+                int id = Integer.parseInt(parts[0]);
+                float x = Float.parseFloat(parts[1]);
+                float y = Float.parseFloat(parts[2]);
+                if (id != playerId) {
+                    NetworkedPlayer np = handler.getWorld().getEntityManager().getNetworkedPlayers().get(id);
+                    if (np == null) {
+                        np = new NetworkedPlayer(handler, x, y, id);
+                        handler.getWorld().getEntityManager().addNetworkedPlayer(np);
+                        System.out.println("Added NetworkedPlayer ID: " + id + " at (" + x + ", " + y + ")");
+                    } else {
+                        np.setPosition(x, y);
+                        System.out.println("Updated NetworkedPlayer ID: " + id + " to (" + x + ", " + y + ")");
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Error parsing position data: " + pd);
+                e.printStackTrace();
             }
         }
     }

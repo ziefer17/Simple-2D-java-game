@@ -34,15 +34,14 @@ public class GameState extends State {
         super(handler);
         world = new World(handler, "src/main/resources/Graphics/Maps/world1.txt", socket, out, in, playerId);
         handler.setWorld(world);
-        player = new Player(handler, 100, 100, playerId, socket, out, in);
-        world.getEntityManager().setPlayer(player);
+        player = world.getEntityManager().getPlayer(); // Use the Player created by World
         playerDescription = new Description(2, Player.name, Player.health, Player.baseHealth, Player.level, handler);
     }
 
     @Override
     public void tick() {
         world.tick();
-
+        // Networked player updates are handled in Game class via socket listener
     }
 
     @Override
@@ -51,7 +50,5 @@ public class GameState extends State {
         playerDescription.render(g);
         coinsText = new Text(coins + "", 50, 126, 4, 4);
         coinsText.render(g);
-
     }
-
 }

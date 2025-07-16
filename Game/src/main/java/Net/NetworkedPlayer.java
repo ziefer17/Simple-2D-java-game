@@ -18,12 +18,15 @@ import java.awt.image.BufferedImage;
  */
 public class NetworkedPlayer extends Entity {
     private Animation animDown, animUp, animLeft, animRight;
-    private int dir = 1;
+    private int dir = 1; // 0=down, 1=up, 2=left, 3=right
     private int playerId;
+    private float lastX, lastY;
 
     public NetworkedPlayer(RenderHandler handler, float x, float y, int playerId) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
         this.playerId = playerId;
+        this.lastX = x;
+        this.lastY = y;
         animDown = new Animation(120, Assets.player_down);
         animUp = new Animation(120, Assets.player_up);
         animLeft = new Animation(120, Assets.player_left);
@@ -32,7 +35,6 @@ public class NetworkedPlayer extends Entity {
 
     @Override
     public void tick() {
-        // Animations tick for smooth rendering
         animDown.tick();
         animUp.tick();
         animRight.tick();
@@ -46,11 +48,42 @@ public class NetworkedPlayer extends Entity {
     }
 
     private BufferedImage getCurrentAnimationFrame() {
-        // Simplified; you can enhance with direction logic if needed
-        return animDown.getCurrentFrame();
+        float xMove = x - lastX;
+        float yMove = y - lastY;
+
+        if (xMove < 0) {
+            dir = 2; // Left
+            return animLeft.getCurrentFrame();
+        } else if (xMove > 0) {
+            dir = 3; // Right
+            return animRight.getCurrentFrame();
+        } else if (yMove < 0) {
+            dir = 1; // Up
+            return animUp.getCurrentFrame();
+        } else if (yMove > 0) {
+            dir = 0; // Down
+            return animDown.getCurrentFrame();
+        } else {
+            // No movement, use current direction and reset animation index
+            if (dir == 0) {
+                animDown.setIndex(0);
+                return animDown.getCurrentFrame();
+            } else if (dir == 1) {
+                animUp.setIndex(0);
+                return animUp.getCurrentFrame();
+            } else if (dir == 2) {
+                animLeft.setIndex(0);
+                return animLeft.getCurrentFrame();
+            } else {
+                animRight.setIndex(0);
+                return animRight.getCurrentFrame();
+            }
+        }
     }
 
     public void setPosition(float x, float y) {
+        this.lastX = this.x;
+        this.lastY = this.y;
         this.x = x;
         this.y = y;
     }
