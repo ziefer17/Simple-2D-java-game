@@ -1,11 +1,10 @@
-package src.main.shooter.game;
+package net;
 
 import java.util.TreeMap;
 
 import src.main.shooter.game.ServerGame.Entity;
-import src.main.shooter.game.action.ActionSet;
+import Content.ActionSet;
 import src.main.shooter.game.entities.PlayerEntity;
-import src.main.shooter.net.Client;
 
 public class ClientGame {
     private final int playerId;

@@ -1,4 +1,4 @@
-package src.main.shooter.gui.client;
+package gui.client;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

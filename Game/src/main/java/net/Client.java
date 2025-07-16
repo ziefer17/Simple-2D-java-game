@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.TreeMap;
 
-import net.ClientGame;
 import src.main.shooter.game.ServerGame.Entity;
 import gui.client.ClientMainFrame;
 import net.packets.ActionPacket;
