@@ -14,8 +14,10 @@ com\mycompany\game\ImageLoader.class
 com\mycompany\game\Utils.class
 Content\Tree.class
 Content\Text.class
+chatroom\Server.class
 States\State.class
 Content\Transition.class
+chatroom\ClientHandler.class
 States\BattleState$1.class
 States\BattleState$4.class
 Content\AttackBarManager$1.class
@@ -26,9 +28,11 @@ com\mycompany\game\KeyBoardListener.class
 States\BattleState$3.class
 States\BattleState.class
 Net\NetworkedPlayer.class
+com\mycompany\game\AudioManager.class
 Content\Level.class
 Net\GameServer$PlayerData.class
 States\BattleState$2.class
+chatroom\Client$1.class
 com\mycompany\game\Sprite.class
 Content\XPBar.class
 com\mycompany\game\Display.class
@@ -48,6 +52,7 @@ Content\Monster.class
 com\mycompany\game\SpriteSheet.class
 Content\Entity.class
 com\mycompany\game\RenderHandler.class
+chatroom\Client.class
 Content\Bar.class
 com\mycompany\game\UIImageButton.class
 States\MenuState.class

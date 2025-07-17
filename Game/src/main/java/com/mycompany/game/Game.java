@@ -66,6 +66,8 @@ public class Game implements Runnable {
     private PrintWriter out;
     private BufferedReader in;
     private int playerId;
+    
+    private AudioManager audioManager;
 
     public Game(String title, int width, int height) {
         this.width = width;
@@ -73,12 +75,13 @@ public class Game implements Runnable {
         this.title = title;
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
+        audioManager = new AudioManager();
         connectToServer();
     }
     
     private void connectToServer() {
         try {
-            socket = new Socket("192.168.1.4", 12345);
+            socket = new Socket("172.32.4.80", 12345);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = in.readLine();
@@ -149,6 +152,7 @@ public class Game implements Runnable {
         gameState = new GameState(handler, socket, out, in, playerId);
         menuState = new MenuState(handler);
         State.setState(gameState);
+        updateSoundtrack();
     }
 //    private void tick() { //updates all variables
 //        keyManager.tick();
@@ -188,6 +192,22 @@ public class Game implements Runnable {
             battleState = new BattleState(handler);
             State.setState(battleState);
             System.out.println("Switched to BattleState");
+        }
+        updateSoundtrack();
+    }
+    
+    private void updateSoundtrack() {
+        String desiredTrack = null;
+        if (State.getState() == menuState) {
+            desiredTrack = "src/main/resources/audio/main_theme.wav";
+        } else if (State.getState() == gameState) {
+            desiredTrack = "src/main/resources/audio/main_theme.wav";
+        } else if (State.getState() == battleState) {
+            desiredTrack = "src/main/resources/audio/main_theme.wav";
+        }
+
+        if (desiredTrack != null && !desiredTrack.equals(audioManager.getCurrentTrack())) {
+            audioManager.playSound(desiredTrack, true);
         }
     }
 
@@ -292,7 +312,7 @@ public class Game implements Runnable {
             return;
         }
         running = false;
-
+        audioManager.stopSound();
         try {
             thread.join();
         } catch (InterruptedException e) {

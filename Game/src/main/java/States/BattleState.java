@@ -168,6 +168,7 @@ public class BattleState extends State {
         handler.getMouseManager().setUIManager(null);
         Transition.canStart = false;
         Game.flag2 = false;
+        Game.flag = false;
         Player player = handler.getWorld().getEntityManager().getPlayer();
         player.endBattle();
         State.setState(handler.getGame().gameState);
