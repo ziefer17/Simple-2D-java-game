@@ -13,10 +13,6 @@ import com.mycompany.game.Game;
 import com.mycompany.game.RenderHandler;
 import com.mycompany.game.World;
 import com.mycompany.game.Animation;
-import States.BattleState;
-import States.GameState;
-import States.State;
-import Content.Tile;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -258,12 +254,12 @@ public class Player extends Creature {
                 flag3 = true;
                 inBattle = true;
                 Game.flag = true;
-                System.out.println("Battle triggered at tile (" + tileX + ", " + tileY + ")");
+                //System.out.println("Battle triggered at tile (" + tileX + ", " + tileY + ")");
             }
         } else if (inBattle && (tileX != a || tileY != b)) {
             inBattle = false;
             flag3 = false;
-            System.out.println("Battle reset: Moved out of bush");
+            //System.out.println("Battle reset: Moved out of bush");
         }
     }
 }

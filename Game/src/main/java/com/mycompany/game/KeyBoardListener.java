@@ -97,7 +97,7 @@ public class KeyBoardListener implements KeyListener, FocusListener {
             current = -1;
         }
     }
-
+}
 
 //    public boolean up()
 //    {
@@ -115,4 +115,4 @@ public class KeyBoardListener implements KeyListener, FocusListener {
 //    {
 //        return keys[KeyEvent.VK_D] || keys[KeyEvent.VK_RIGHT];
 //    }
-}
+

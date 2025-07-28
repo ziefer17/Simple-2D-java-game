@@ -41,7 +41,6 @@ public class GameState extends State {
     @Override
     public void tick() {
         world.tick();
-        // Networked player updates are handled in Game class via socket listener
     }
 
     @Override

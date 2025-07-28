@@ -31,6 +31,7 @@ Net\NetworkedPlayer.class
 com\mycompany\game\AudioManager.class
 Content\Level.class
 Net\GameServer$PlayerData.class
+gui\GameLauncher.class
 States\BattleState$2.class
 chatroom\Client$1.class
 com\mycompany\game\Sprite.class

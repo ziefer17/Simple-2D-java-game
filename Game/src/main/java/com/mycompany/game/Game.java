@@ -68,11 +68,13 @@ public class Game implements Runnable {
     private int playerId;
     
     private AudioManager audioManager;
+    private String serverIP;
 
-    public Game(String title, int width, int height) {
+    public Game(String title, int width, int height, String serverIP) {
         this.width = width;
         this.height = height;
         this.title = title;
+        this.serverIP = serverIP;
         keyManager = new KeyBoardListener();
         mouseManager = new MouseEventListener();
         audioManager = new AudioManager();
@@ -81,7 +83,7 @@ public class Game implements Runnable {
     
     private void connectToServer() {
         try {
-            socket = new Socket("172.32.4.80", 12345);
+            socket = new Socket(serverIP, 12345);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = in.readLine();
@@ -154,25 +156,6 @@ public class Game implements Runnable {
         State.setState(gameState);
         updateSoundtrack();
     }
-//    private void tick() { //updates all variables
-//        keyManager.tick();
-//
-//        if (State.getState() != null) {
-//            State.getState().tick();
-//        }
-//
-//        if (flag) {
-//            flag = false;
-//            transition = new Transition();
-//            flag2 = true;
-//        }
-//        if (Transition.canStart) {
-//            Transition.canStart = false;
-//            battling = true;
-//            battleState = new BattleState(handler);
-//            State.setState(handler.getGame().battleState);
-//        }
-//    }
     
     private void tick() {
         keyManager.tick();
@@ -241,11 +224,11 @@ public class Game implements Runnable {
         g.dispose();
     }
 
-    //starting the thread runs this method
+    @Override
     public void run() {
         init();
         fps = 60;
-        timePerTick = 1000000000 / fps; //1 billion bcus 1 billion nanoseconds in one second
+        timePerTick = 1000000000 / fps;
         delta = 0;
         lastTime = System.nanoTime();
         timer = 0;
@@ -254,7 +237,6 @@ public class Game implements Runnable {
         while (running) {
             now = System.nanoTime();
             delta += (now - lastTime) / timePerTick;
-            //System.out.println(delta);
             timer += now - lastTime;
             lastTime = now;
             if (delta >= 1) {
@@ -263,7 +245,7 @@ public class Game implements Runnable {
                 ticks++;
                 delta--;
             }
-            if (timer >= 1000000000) { //if timer exceeds one second
+            if (timer >= 1000000000) {
                 System.out.println("FPS: " + ticks);
                 ticks = 0;
                 timer = 0;
@@ -321,7 +303,8 @@ public class Game implements Runnable {
     }
 
     public static void main(String[] args) {
-        Game game = new Game("Title", 800, 800);
+        String serverIp = args.length > 0 ? args[0] : "192.168.1.5";
+        Game game = new Game("Title", 800, 800, serverIp);
         game.start();
     }
 }

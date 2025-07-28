@@ -76,30 +76,6 @@ public class BattleState extends State {
 
     private boolean f;
 
-//    @Override
-//    public void tick() {
-//        if (showBars) {
-//            bar.tick();
-//            attackBarManager.tick();
-//        }
-//        uiManager.tick();
-//        monster.tick();
-//        inGamePlayer.tick();
-//
-//        if (Monster.deathState != 0) {
-//            if (!f) {
-//                f = true;
-//                handler.getMouseManager().setUIManager(arrowManager);
-//            }
-//            arrowManager.tick();
-//            if (switchGameStates) {
-//                switchGameStates = false;
-//                switchToGameState();
-//                destroy();
-//            }
-//        }
-//
-//    }
     
     @Override
     public void tick() {

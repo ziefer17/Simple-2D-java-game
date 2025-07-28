@@ -7,9 +7,6 @@ package Content;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import com.mycompany.game.Game;
-import com.mycompany.game.RenderHandler;
-import Content.Assets;
 
 public class Tile {
 

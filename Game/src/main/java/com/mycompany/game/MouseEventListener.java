@@ -11,10 +11,6 @@ public class MouseEventListener implements MouseListener, MouseMotionListener {
     private int mouseX, mouseY;
     private UIManager uiManager;
 
-//    public MouseEventListener(Game game) {
-//        this.game = game;
-//    }
-
     public void setUIManager(UIManager uiManager) {
         this.uiManager = uiManager;
     }

@@ -7,14 +7,10 @@ package Content;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 import com.mycompany.game.ClickListener;
-import com.mycompany.game.UIImageButton;
 import com.mycompany.game.UIObject;
-import States.BattleState;
 
 public class Arrow extends UIObject {
 
