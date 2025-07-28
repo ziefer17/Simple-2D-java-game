@@ -11,7 +11,7 @@ import com.mycompany.game.SpriteSheet;
 
 public class Assets {
 
-    private static final int width = 16; //Size of each tile in sprite sheet
+    private static final int width = 16;
     private static final int height = 16;
 
     private static final int pWidth = 32;
