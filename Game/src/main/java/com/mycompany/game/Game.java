@@ -182,11 +182,11 @@ public class Game implements Runnable {
     private void updateSoundtrack() {
         String desiredTrack = null;
         if (State.getState() == menuState) {
-            desiredTrack = "src/main/resources/audio/main_theme.wav";
+            desiredTrack = "/audio/main_theme.wav";
         } else if (State.getState() == gameState) {
-            desiredTrack = "src/main/resources/audio/main_theme.wav";
+            desiredTrack = "/audio/main_theme.wav";
         } else if (State.getState() == battleState) {
-            desiredTrack = "src/main/resources/audio/main_theme.wav";
+            desiredTrack = "/audio/main_theme.wav";
         }
 
         if (desiredTrack != null && !desiredTrack.equals(audioManager.getCurrentTrack())) {

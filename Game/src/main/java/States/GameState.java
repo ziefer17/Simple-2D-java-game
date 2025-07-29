@@ -32,7 +32,7 @@ public class GameState extends State {
 
     public GameState(RenderHandler handler, Socket socket, PrintWriter out, BufferedReader in, int playerId) {
         super(handler);
-        world = new World(handler, "src/main/resources/Graphics/Maps/world1.txt", socket, out, in, playerId);
+        world = new World(handler, "/Graphics/Maps/world1.txt", socket, out, in, playerId);
         handler.setWorld(world);
         player = world.getEntityManager().getPlayer(); // Use the Player created by World
         playerDescription = new Description(2, Player.name, Player.health, Player.baseHealth, Player.level, handler);

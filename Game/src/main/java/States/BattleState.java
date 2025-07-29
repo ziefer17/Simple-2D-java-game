@@ -64,7 +64,7 @@ public class BattleState extends State {
         this.handler = handler;
         bar = new Bar(handler);
 
-        monsters.add(new Monster("Rabbit", Assets.monsters[0], 38 * 4, 27 * 4, 440, 160, 50, 20, 1, handler));
+        monsters.add(new Monster("Monster", Assets.monsters[0], 38 * 4, 27 * 4, 440, 160, 50, 20, 1, handler));
         monster = monsters.get(0);
         inGamePlayer = new InGamePlayer(handler);
         attackBarManager = new AttackBarManager(handler);

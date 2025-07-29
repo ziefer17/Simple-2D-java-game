@@ -26,12 +26,12 @@ public class GameLauncher extends JFrame{
     public GameLauncher() {
         super("Game Launcher");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 300);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(5, 1, 10, 10));
         
-        JLabel textureLabel = new JLabel("Select Texture Set:");
-        textureComboBox = new JComboBox<>(new String[]{"Default Textures", "Alternate Textures"});
+        JLabel textureLabel = new JLabel("Select Texture:");
+        textureComboBox = new JComboBox<>(new String[]{"Map 1", "Map 2"});
         
         JLabel portLabel = new JLabel("Enter Server Port:");
         portField = new JTextField("12345");

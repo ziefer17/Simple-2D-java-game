@@ -11,6 +11,7 @@ import java.io.IOException;
 public class AudioManager {
     private Clip currentClip;
     private String currentTrack;
+    private Clip clip;
 
     public AudioManager() {
         currentClip = null;
@@ -23,24 +24,16 @@ public class AudioManager {
             stopSound();
 
             
-            File audioFile = new File(filePath);
-            if (!audioFile.exists()) {
-                System.err.println("Audio file not found: " + filePath);
-                return;
-            }
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
-            currentClip = AudioSystem.getClip();
-            currentClip.open(audioStream);
-            currentTrack = filePath;
-
-            
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
+                AudioManager.class.getResource(filePath));
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
             if (loop) {
-                currentClip.loop(Clip.LOOP_CONTINUOUSLY);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } else {
+                clip.start();
             }
-
-            
-            currentClip.start();
-            System.out.println("Playing audio: " + filePath);
+            currentTrack = filePath;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.err.println("Error playing audio: " + filePath);
             e.printStackTrace();

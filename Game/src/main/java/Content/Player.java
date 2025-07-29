@@ -39,8 +39,8 @@ public class Player extends Creature {
     private BufferedReader in;
     private int playerId;
     private boolean inBattle = false;
-    private long lastBattleTime = 0; // Track time of last battle
-    private static final long BATTLE_COOLDOWN = 10000; // 1 second cooldown in milliseconds
+    private long lastBattleTime = 0;
+    private static final long BATTLE_COOLDOWN = 10000; // 10 second cooldown
 
     public Player(RenderHandler handler, float x, float y, int playerId, Socket socket, PrintWriter out, BufferedReader in) {
         super(handler, x, y, Creature.PLAYER_WIDTH, Creature.PLAYER_HEIGHT);
@@ -57,7 +57,7 @@ public class Player extends Creature {
         health = 100;
         baseHealth = 100;
         level = 1;
-        name = "Hero" + playerId; // Unique name per player
+        name = "Hero" + playerId;
 
         animDown = new Animation(120, Assets.player_down);
         animUp = new Animation(120, Assets.player_up);
@@ -65,17 +65,6 @@ public class Player extends Creature {
         animRight = new Animation(120, Assets.player_right);
     }
     
-//    @Override
-//    public void move() {
-//        if (xMove != 0 && !checkEntityCollisions(xMove, 0f)) {
-//            moveX();
-//            sendPosition();
-//        }
-//        if (yMove != 0 && !checkEntityCollisions(0f, yMove)) {
-//            moveY();
-//            sendPosition();
-//        }
-//    }
     
     @Override
     public void move() {
@@ -114,13 +103,13 @@ public class Player extends Creature {
     
     @Override
     public void tick() {
-        if (!Game.flag2) { // Only update animations if not transitioning
+        if (!Game.flag2) { //Only update animations
             animDown.tick();
             animUp.tick();
             animRight.tick();
             animLeft.tick();
         }
-        if (!inBattle) { // Only get input and move if not in battle
+        if (!inBattle) { //Only get input and move
             getInput();
             move();
             checkEncounter();
@@ -254,12 +243,10 @@ public class Player extends Creature {
                 flag3 = true;
                 inBattle = true;
                 Game.flag = true;
-                //System.out.println("Battle triggered at tile (" + tileX + ", " + tileY + ")");
             }
         } else if (inBattle && (tileX != a || tileY != b)) {
             inBattle = false;
             flag3 = false;
-            //System.out.println("Battle reset: Moved out of bush");
         }
     }
 }

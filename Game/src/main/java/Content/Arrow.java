@@ -39,9 +39,9 @@ public class Arrow extends UIObject {
     public void tick() {
         i++;
         if (i <= 15) {
-            arrowX += 0.2f;
+            arrowX += 0.2f;//every tick move right
         } else if (i <= 30) {
-            arrowX -= 0.2f;
+            arrowX -= 0.2f;//every tick move left
         } else {
             i = 0;
         }

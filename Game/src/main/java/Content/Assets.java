@@ -39,11 +39,6 @@ public class Assets {
         SpriteSheet treeSheet = new SpriteSheet(ImageLoader.loadImage(treePath));
         SpriteSheet barSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Bar.png"));
         SpriteSheet monsterSheet = new SpriteSheet(ImageLoader.loadImage(monsterPath));
-
-        //SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Tiles2.png"));
-        //SpriteSheet ledgeSheet = new SpriteSheet(ImageLoader.loadImage("/textures/LedgeTiles3.png"));
-        //SpriteSheet treeSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Trees2.png"));
-        //SpriteSheet monsterSheet = new SpriteSheet(ImageLoader.loadImage("/textures/Monsters2.png"));
         
         buttonStart = new BufferedImage[2];
         buttonStart[0] = sheet.crop(0, height, width * 2, height);
